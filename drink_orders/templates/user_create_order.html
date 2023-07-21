@@ -1,0 +1,17 @@
+<form method="POST" action="{% url 'submit_form' %}">
+  {% csrf_token %}
+  <div class="button-group">
+    <button type="button"
+            class="square-button{% if selected_button == 'button1' %}selected{% endif %}"
+            name="button1">Button 1</button>
+    <button type="button"
+            class="square-button {% if selected_button == 'button2' %}selected{% endif %}"
+            name="button2">Button 2</button>
+    <button type="button"
+            class="square-button {% if selected_button == 'button3' %}selected{% endif %}"
+            name="button3">Button 3</button>
+  </div>
+  <button type="submit"
+          class="submit-button {% if selected_button %}active{% else %}inactive{% endif %}"
+          name="submit" disabled>Submit</button>
+</form>

@@ -1,0 +1,52 @@
+<style>
+    .calendar {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        text-align: center;
+    }
+
+    .day {
+        background-color: #ccc;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .button {
+        background-color: #ccc;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .button:focus {
+        background-color: red;
+    }
+
+    .submit-button {
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="calendar">
+        {% for day in days %}
+            <label class="button">
+                <input type="checkbox" class="button">
+                    {{ day.day_name }}
+                </input>
+            </label>
+        {% endfor %}
+    </div>
+
+    <div class="submit-button">
+        <button type="submit">Submit</button>
+    </div>
+</form>

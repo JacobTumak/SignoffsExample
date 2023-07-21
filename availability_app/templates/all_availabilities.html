@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Schedule</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #4285F4;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    td {
+      border: 1px solid #ddd;
+      color: black;
+      background-color: #fff;
+    }
+
+    td.empty-box {
+      background-color: #f5f5f5;
+    }
+
+    td.selected-day {
+      background-color: green;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Weekly Schedule</h2>
+    <table>
+      <tr>
+      <th></th>
+        {% for day in all_employees.0.availability %}
+        <th>{{ day }}</th>
+        {% endfor %}
+      </tr>
+    {% for employee in all_employees %}
+        {% if employee.employee.username %}
+          <tr>
+          <th>{{ employee.employee.username }}</th>
+            {% for day, value in employee.availability.items %}
+                <td class="{% if value == True %}selected-day{% else %}empty-box{% endif %}">{{ day }}</td>
+            {% endfor %}
+        {% endif %}
+      {% endfor %}
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

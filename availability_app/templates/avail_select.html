@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Days of the Week Form</title>
+  {% load static %}
+  <link href="{% static 'styles.css' %}" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <form id="daysForm" method="post" action="submitted/">
+    {% csrf_token %}
+      <div class="days">
+      {% for day in days %}
+        <input type="checkbox" id="{{ day|lower }}" name="day" value="{{ day|lower }}">
+        <label for="{{ day|lower }}">{{ day }}</label>
+      {% endfor %}
+      </div>
+
+      <div class="submit-button">
+        <input type="submit" value="Submit">
+      </div>
+    </form>
+  </div>
+</body>
+</html>

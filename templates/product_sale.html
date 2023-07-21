@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drink Sales Dashboard</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            margin: 50px auto;
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sale-button {
+            width: 200px;
+            height: 50px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sale-button:hover {
+            background-color: #0056b3;
+            cursor: pointer;
+        }
+
+        .sale-button.registered {
+            background-color: #28a745;
+        }
+
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .sales-table th, .sales-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .sales-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        .sales-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function registerSale(button) {
+            var flavor = button.getAttribute('data-flavor');
+            button.classList.add('registered');
+            button.innerHTML = 'Registered!';
+
+            $.ajax({
+                url: '/register_sale/',
+                method: 'POST',
+                data: { product_name: flavor },
+                success: function(response) {
+                    console.log(response.message);
+                    updateSalesTable(response.sales);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error registering sale:', error);
+                }
+            });
+
+            setTimeout(function() {
+                button.classList.remove('registered');
+                button.innerHTML = flavor;
+            }, 2000); // Revert back to flavor after 2 seconds
+        }
+
+        function updateSalesTable(sales) {
+            var tableBody = document.getElementById('sales-table-body');
+            tableBody.innerHTML = '';
+
+            for (var i = 0; i < sales.length; i++) {
+                var row = tableBody.insertRow(i);
+                var flavorCell = row.insertCell(0);
+                var timeCell = row.insertCell(1);
+                var dateCell = row.insertCell(2);
+
+                flavorCell.innerHTML = sales[i].product;
+                timeCell.innerHTML = sales[i].signoff_time;
+                dateCell.innerHTML = sales[i].signoff_date;
+            }
+        }
+
+        // Initial update of the sales table on page load
+        $(document).ready(function() {
+            $.ajax({
+                url: '/get_sales/',
+                success: function(response) {
+                    updateSalesTable(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching sales data:', error);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Drink Sales</h1>
+        <div class="button-container">
+            <button class="sale-button" onclick="registerSale(this)" data-flavor="lemonade">Lemonade</button>
+            <button class="sale-button" onclick="registerSale(this)" data-flavor="koolaid">Koolaid</button>
+            <button class="sale-button" onclick="registerSale(this)" data-flavor="iced_tea">Iced Tea</button>
+        </div>
+        <h2>Recent Sales</h2>
+        <table class="sales-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Time</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="sales-table-body">
+                <!-- Sales data will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+<script>
+// TODO: switch out of hardcoded flavour names if possible
+</script>
