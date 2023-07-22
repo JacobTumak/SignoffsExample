@@ -1,5 +1,5 @@
 from django.contrib import admin
-from availability_app.models import EmployeeAvailability, EmployeeSignet
+from availability_app.models import Employee, EmployeeAvailabilitySignet, EmployeeAvailability
 
 # from myapp.models import Author
 #
@@ -10,12 +10,16 @@ from availability_app.models import EmployeeAvailability, EmployeeSignet
 #
 # admin.site.register(Author, AuthorAdmin)
 
-class EmployeeAvailabilityAdmin(admin.ModelAdmin):
-    pass
-
 class EmployeeSignetAdmin(admin.ModelAdmin):
     pass
+admin.site.register(EmployeeAvailabilitySignet, EmployeeSignetAdmin)
 
 
-admin.site.register(EmployeeSignet, EmployeeSignetAdmin)
+class EmployeeAvailabilityAdmin(admin.ModelAdmin):
+    pass
 admin.site.register(EmployeeAvailability, EmployeeAvailabilityAdmin)
+
+
+class EmployeeAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Employee, EmployeeAdmin)

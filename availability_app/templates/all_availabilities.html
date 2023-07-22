@@ -56,15 +56,15 @@
     <table>
       <tr>
       <th></th>
-        {% for day in all_employees.0.availability %}
+        {% for day in all_availabilities.0.DAYS.values %}
         <th>{{ day }}</th>
         {% endfor %}
       </tr>
-    {% for employee in all_employees %}
-        {% if employee.employee.username %}
+    {% for availability in all_availabilities %}
+        {% if availability.employee.user.username %}
           <tr>
-          <th>{{ employee.employee.username }}</th>
-            {% for day, value in employee.availability.items %}
+          <th>{{ availability.employee.user.username }}</th>
+            {% for day, value in availability.get_availability.items %}
                 <td class="{% if value == True %}selected-day{% else %}empty-box{% endif %}">{{ day }}</td>
             {% endfor %}
         {% endif %}

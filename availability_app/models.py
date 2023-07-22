@@ -4,28 +4,22 @@ from signoffs.models import Signet
 from signoffs.signoffs import SimpleSignoff
 
 
-# Create your models here.
-class EmployeeAvailabilityOld(models.Model):
-    employee = models.ForeignKey(User, on_delete=models.CASCADE)
-    availability = {
-        'sunday': models.BooleanField(default=False),
-        'monday': models.BooleanField(default=False),
-        'tuesday': models.BooleanField(default=False),
-        'wednesday': models.BooleanField(default=False),
-        'thursday': models.BooleanField(default=False),
-        'friday': models.BooleanField(default=False),
-        'saturday': models.BooleanField(default=False)
-                    }
+class Employee(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    def update_days(self, days):
-        for day in self.availability:
-            self.availability[day] = False
-            if day in days:
-                self.availability[day] = True
-        self.save()
+    def __str__(self):
+        return self.user.username
 
 
 class EmployeeAvailability(models.Model):
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
+    DAYS = {'sun':'Sunday',
+            'mon':'Monday',
+            'tue':'Tuesday',
+            'wed':'Wednesday',
+            'thur':'Thursday',
+            'fri':'Friday',
+            'sat':'Saturday'}
     sunday = models.BooleanField(default=False, name='Sunday')
     monday = models.BooleanField(default=False, name='Monday')
     tuesday = models.BooleanField(default=False, name='Tuesday')
@@ -34,23 +28,30 @@ class EmployeeAvailability(models.Model):
     friday = models.BooleanField(default=False, name='Friday')
     saturday = models.BooleanField(default=False, name='Saturday')
 
+    def __str__(self):
+        return f"{self.employee.user.username}'s Availability"
+
+    def get_availability(self):
+        return {field.name: getattr(self, field.name) for field in self.get_day_fields()}
+
+    def get_day(self):
+        return getattr(self, self.name)
+
+    def get_day_fields(self):
+        return [field for field in self._meta.get_fields() if field.name in self.DAYS.values()]
+
     def update_days(self, days):
-        for field in self._meta.get_fields():
-            self.field = False
+        for field in self.get_day_fields():
             if field.name.lower() in days:
-                self.field = True
-        self.save()
+                setattr(self, field.name, True)
+            else:
+                setattr(self, field.name, False)
 
-
-class Employee(models.Model):
-    employee = models.ForeignKey(User, on_delete=models.CASCADE)
-    availability = models.ForeignKey('EmployeeAvailability', on_delete=models.CASCADE, default=False)
 
 
 availability_signoff = SimpleSignoff.register(id='availability_app.AvailabilitySignoff',
-                                              signetModel='EmployeeSignet')
+                                              signetModel='EmployeeAvailabilitySignet')
 
-
-class EmployeeSignet(Signet):
+class EmployeeAvailabilitySignet(Signet):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     signoff_id = 'availability_app.AvailabilitySignoff'
-    employee_availability = models.ForeignKey('EmployeeAvailability', on_delete=models.CASCADE)
