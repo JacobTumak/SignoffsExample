@@ -7,6 +7,7 @@ from signoffs.signoffs import SimpleSignoff
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+
     def __str__(self):
         return self.user.username
 
@@ -34,9 +35,6 @@ class EmployeeAvailability(models.Model):
     def get_availability(self):
         return {field.name: getattr(self, field.name) for field in self.get_day_fields()}
 
-    def get_day(self):
-        return getattr(self, self.name)
-
     def get_day_fields(self):
         return [field for field in self._meta.get_fields() if field.name in self.DAYS.values()]
 
@@ -48,10 +46,11 @@ class EmployeeAvailability(models.Model):
                 setattr(self, field.name, False)
 
 
-
 availability_signoff = SimpleSignoff.register(id='availability_app.AvailabilitySignoff',
                                               signetModel='EmployeeAvailabilitySignet')
+
 
 class EmployeeAvailabilitySignet(Signet):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     signoff_id = 'availability_app.AvailabilitySignoff'
+    # user = models.ForeignKey(Employee, on_delete=models.CASCADE)

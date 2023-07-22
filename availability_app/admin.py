@@ -1,5 +1,5 @@
 from django.contrib import admin
-from availability_app.models import Employee, EmployeeAvailabilitySignet, EmployeeAvailability
+from availability_app.models import Employee, EmployeeAvailabilitySignet, EmployeeAvailability, SimpleSignoff
 
 # from myapp.models import Author
 #
